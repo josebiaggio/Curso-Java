@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Scanner;
+
 public class JogoDaVelha {
     public static void main(String[] args) {
         char[][] tabuleiro = {
@@ -7,11 +9,39 @@ public class JogoDaVelha {
                 {'_', '|', '_', '|', '_'},
                 {'_', '|', '_', '|', '_'},
         };
+        char[] posicoesTabuleiro = new char[9];
+        int jogada = 0;
+        int jogador = 0;
+        char jogador1 = 'X';
+        char jogador2 = 'O';
+        boolean posicaoRegistrada = false;
+        Scanner scanner = new Scanner(System.in);
 
+        System.out.println("Jogo da Velha");
         printTabuleiro(tabuleiro);
-        atualizarTabuleiro(2, 1, tabuleiro);
-        atualizarTabuleiro(5, 2, tabuleiro);
-        atualizarTabuleiro(9, 1, tabuleiro);
+
+        for(int i = 1; i <= posicoesTabuleiro.length; i++) {
+            if(i % 2 == 0) {
+                jogador = 2;
+            } else {
+                jogador = 1;
+            }
+
+            System.out.printf("[Jogada %d][Jogador %d] Insira uma posição: ", i, jogador);
+            jogada = scanner.nextInt();
+
+            if(jogador == 1) {
+                posicaoRegistrada = registrarPosicao(posicoesTabuleiro, jogada, jogador1);
+            } else {
+                posicaoRegistrada = registrarPosicao(posicoesTabuleiro, jogada, jogador2);
+            }
+
+            if(posicaoRegistrada == true) {
+                atualizarTabuleiro(jogada, jogador, tabuleiro);
+            } else {
+                i--;
+            }
+        }
     }
 
     public static void printTabuleiro(char[][] tabuleiro) {
@@ -21,6 +51,22 @@ public class JogoDaVelha {
             }
             System.out.println();
         }
+    }
+
+    public static boolean registrarPosicao(char[] posicoesTabuleiro, int posicao, char jogador) {
+        boolean posicaoRegistrada = false;
+        for(int i = 1; i <= posicoesTabuleiro.length; i++) {
+            if(posicao == i) {
+                // Verificar se posição do tabuleiro foi preenchida
+                if(posicoesTabuleiro[i] == 'X' || posicoesTabuleiro[i] == 'O') {
+                    posicaoRegistrada = false;
+                } else {
+                    posicoesTabuleiro[i] = jogador;
+                    posicaoRegistrada = true;
+                }
+            }
+        }
+        return posicaoRegistrada;
     }
 
     public static void atualizarTabuleiro(int posicao, int jogador, char[][] tabuleiro) {

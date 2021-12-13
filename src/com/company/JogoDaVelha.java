@@ -4,122 +4,105 @@ import java.util.Scanner;
 
 public class JogoDaVelha {
     public static void main(String[] args) {
-        char[][] tabuleiro = {
-                {'_', '|', '_', '|', '_'},
-                {'_', '|', '_', '|', '_'},
-                {'_', '|', '_', '|', '_'},
-        };
-        char[] posicoesTabuleiro = new char[9];
-        int jogada = 0;
-        int jogador = 0;
-        char jogador1 = 'X';
-        char jogador2 = 'O';
-        boolean posicaoRegistrada = false;
         Scanner scanner = new Scanner(System.in);
+        Tabuleiro tabuleiro = new Tabuleiro();
 
         System.out.println("Jogo da Velha");
-        printTabuleiro(tabuleiro);
+        System.out.println();
+        tabuleiro.mostrar();
+        System.out.println();
 
-        for(int i = 1; i <= posicoesTabuleiro.length; i++) {
-            if(i % 2 == 0) {
-                jogador = 2;
-            } else {
-                jogador = 1;
-            }
+        System.out.println("Opções de jogadores: ");
+        System.out.println();
+        System.out.println("1 - Jogador 1;");
+        System.out.println("2 - Jogador 2;");
+        System.out.println();
+        System.out.print("Escolha o jogador que deseja jogar: ");
+        int jogadorEscolhido = scanner.nextInt();
+        String jogadorQueIniciaPartida = null;
 
-            System.out.printf("[Jogada %d][Jogador %d] Insira uma posição: ", i, jogador);
-            jogada = scanner.nextInt();
-
-            if(jogador == 1) {
-                posicaoRegistrada = registrarPosicao(posicoesTabuleiro, jogada, jogador1);
-            } else {
-                posicaoRegistrada = registrarPosicao(posicoesTabuleiro, jogada, jogador2);
-            }
-
-            if(posicaoRegistrada == true) {
-                atualizarTabuleiro(jogada, jogador, tabuleiro);
-            } else {
-                i--;
-            }
-        }
-    }
-
-    public static void printTabuleiro(char[][] tabuleiro) {
-        for(char[] row: tabuleiro) {
-            for(char column: row) {
-                System.out.print(column);
-            }
-            System.out.println();
-        }
-    }
-
-    public static boolean registrarPosicao(char[] posicoesTabuleiro, int posicao, char jogador) {
-        boolean posicaoRegistrada = false;
-        for(int i = 1; i <= posicoesTabuleiro.length; i++) {
-            if(posicao == i) {
-                // Verificar se posição do tabuleiro foi preenchida
-                if(posicoesTabuleiro[i] == 'X' || posicoesTabuleiro[i] == 'O') {
-                    posicaoRegistrada = false;
-                } else {
-                    posicoesTabuleiro[i] = jogador;
-                    posicaoRegistrada = true;
-                }
-            }
-        }
-        return posicaoRegistrada;
-    }
-
-    public static void atualizarTabuleiro(int posicao, int jogador, char[][] tabuleiro) {
-        char character;
-
-        // Jogador 1 = 'X'
-        // Jogador 2 = 'O'
-
-        if(jogador == 1) {
-            character = 'X';
-        } else {
-            character = 'O';
-        }
-
-        switch (posicao) {
+        switch (jogadorEscolhido) {
             case 1:
-                tabuleiro[0][0] = character;
-                printTabuleiro(tabuleiro);
+                jogadorQueIniciaPartida = "Jogador 1";
                 break;
             case 2:
-                tabuleiro[0][2] = character;
-                printTabuleiro(tabuleiro);
-                break;
-            case 3:
-                tabuleiro[0][4] = character;
-                printTabuleiro(tabuleiro);
-                break;
-            case 4:
-                tabuleiro[1][0] = character;
-                printTabuleiro(tabuleiro);
-                break;
-            case 5:
-                tabuleiro[1][2] = character;
-                printTabuleiro(tabuleiro);
-                break;
-            case 6:
-                tabuleiro[1][4] = character;
-                printTabuleiro(tabuleiro);
-                break;
-            case 7:
-                tabuleiro[2][0] = character;
-                printTabuleiro(tabuleiro);
-                break;
-            case 8:
-                tabuleiro[2][2] = character;
-                printTabuleiro(tabuleiro);
-                break;
-            case 9:
-                tabuleiro[2][4] = character;
-                printTabuleiro(tabuleiro);
+                jogadorQueIniciaPartida = "Jogador 2";
                 break;
             default:
                 break;
+        }
+
+        System.out.println("Jogador que iniciará a partida: " + jogadorQueIniciaPartida);
+        System.out.println();
+        System.out.println("Opções de símbolos:");
+        System.out.println();
+        System.out.println("1 - X;");
+        System.out.println("2 - O;");
+        System.out.println();
+        System.out.printf("%s, escolha o símbolo que deseja jogar: ", jogadorQueIniciaPartida);
+        int simboloEscolhido = scanner.nextInt();
+
+        Jogador jogador1 = new Jogador();
+        Jogador jogador2 = new Jogador();
+
+        switch (simboloEscolhido) {
+            case 1:
+                jogador1.setSimbolo('X');
+                jogador2.setSimbolo('O');
+                break;
+            case 2:
+                jogador1.setSimbolo('O');
+                jogador2.setSimbolo('X');
+                break;
+            default:
+                break;
+        }
+
+        char simboloJogador1 = jogador1.getSimbolo();
+        char simboloJogador2 = jogador2.getSimbolo();
+        System.out.printf("[Jogador 1: '%c'][Jogador 2: '%c']\n", simboloJogador1, simboloJogador2);
+        System.out.println();
+
+        char[] posicoesTabuleiro = tabuleiro.getPosicoes();
+        boolean posicaoRegistrada = false;
+        char simbolo = ' ';
+        int jogador = 0;
+
+        for(int i = 1; i <= posicoesTabuleiro.length; i++) {
+            if(i % 2 == 1) {
+                jogador = 1;
+            } else {
+                jogador = 2;
+            }
+
+            if(i >= 5) {
+                boolean jogador1Vencedor = tabuleiro.verificarSeTemVencedor(simboloJogador1);
+                boolean jogador2Vencedor = tabuleiro.verificarSeTemVencedor(simboloJogador2);
+                if(jogador1Vencedor) {
+                    System.out.println("Jogador 1 venceu a partida");
+                    break;
+                } else if(jogador2Vencedor) {
+                    System.out.println("Jogador 2 venceu a partida");
+                    break;
+                }
+            }
+
+            System.out.printf("[Jogada %d][Jogador %d] Insira uma posição: ", i, jogador);
+            int posicao = scanner.nextInt();
+
+            if(jogador == 1) {
+                posicaoRegistrada = tabuleiro.registrarPosicao(posicao, simboloJogador1);
+                simbolo = simboloJogador1;
+            } else {
+                posicaoRegistrada = tabuleiro.registrarPosicao(posicao, simboloJogador2);
+                simbolo = simboloJogador2;
+            }
+
+            if(posicaoRegistrada) {
+                tabuleiro.atualizar(posicao, simbolo);
+            } else {
+                i--;
+            }
         }
     }
 }

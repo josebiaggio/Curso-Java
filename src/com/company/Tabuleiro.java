@@ -13,8 +13,8 @@ public class Tabuleiro {
 
     public boolean registrarPosicao(int posicao, char simbolo) {
         boolean posicaoRegistrada = false;
-        for(int i = 1; i <= this.posicoes.length; i++) {
-            if(posicao == i) {
+        for(int i = 0; i < this.posicoes.length; i++) {
+            if(posicao - 1 == i) {
                 // Verificar se posição do tabuleiro foi preenchida
                 if(this.posicoes[i] == 'X' || this.posicoes[i] == 'O') {
                     posicaoRegistrada = false;

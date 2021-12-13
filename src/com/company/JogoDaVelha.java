@@ -45,17 +45,10 @@ public class JogoDaVelha {
         Jogador jogador1 = new Jogador();
         Jogador jogador2 = new Jogador();
 
-        switch (simboloEscolhido) {
-            case 1:
-                jogador1.setSimbolo('X');
-                jogador2.setSimbolo('O');
-                break;
-            case 2:
-                jogador1.setSimbolo('O');
-                jogador2.setSimbolo('X');
-                break;
-            default:
-                break;
+        if(jogadorEscolhido == 1) {
+            setSimbolo(simboloEscolhido, jogador1, jogador2);
+        } else if(jogadorEscolhido == 2) {
+            setSimbolo(simboloEscolhido, jogador2, jogador1);
         }
 
         char simboloJogador1 = jogador1.getSimbolo();
@@ -69,15 +62,24 @@ public class JogoDaVelha {
         int jogador = 0;
 
         for(int i = 1; i <= posicoesTabuleiro.length; i++) {
-            if(i % 2 == 1) {
-                jogador = 1;
-            } else {
-                jogador = 2;
+            if(jogadorEscolhido == 1) {
+                if(i % 2 == 1) {
+                    jogador = 1;
+                } else {
+                    jogador = 2;
+                }
+            } else if (jogadorEscolhido == 2) {
+                if(i % 2 == 1) {
+                    jogador = 2;
+                } else {
+                    jogador = 1;
+                }
             }
 
             if(i >= 5) {
                 boolean jogador1Vencedor = tabuleiro.verificarSeTemVencedor(simboloJogador1);
                 boolean jogador2Vencedor = tabuleiro.verificarSeTemVencedor(simboloJogador2);
+                System.out.println();
                 if(jogador1Vencedor) {
                     System.out.println("Jogador 1 venceu a partida");
                     break;
@@ -101,8 +103,26 @@ public class JogoDaVelha {
             if(posicaoRegistrada) {
                 tabuleiro.atualizar(posicao, simbolo);
             } else {
+                System.out.println();
+                System.out.println("Jogada inválida. Essa posição já foi preenchida!");
+                System.out.println();
                 i--;
             }
+        }
+    }
+
+    public static void setSimbolo(int simboloEscolhido, Jogador jogadorEscolhido, Jogador jogador) {
+        switch (simboloEscolhido) {
+            case 1:
+                jogadorEscolhido.setSimbolo('X');
+                jogador.setSimbolo('O');
+                break;
+            case 2:
+                jogadorEscolhido.setSimbolo('O');
+                jogador.setSimbolo('X');
+                break;
+            default:
+                break;
         }
     }
 }
